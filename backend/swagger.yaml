@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.0
+paths:
+  /user:
+    get:
+      summary: Get user
+      responses:
+        '200':
+          description: Returns a user
+        '404':
+          description: User not found
+        '401':
+          description: Not authenticated
+    post:
+      summary: Create user
+      responses:
+        '200':
+          description: User created
+        '400':
+          description: Invalid input data
+        '401':
+          description: Not authenticated
