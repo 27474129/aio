@@ -13,9 +13,12 @@ Jinja2==3.1.2
 Mako==1.2.4
 MarkupSafe==2.1.2
 multidict==6.0.4
+mypy==1.2.0
+mypy-extensions==1.0.0
 pydantic==1.10.7
 PyYAML==6.0
 SQLAlchemy==2.0.12
 swagger-ui-py==22.7.13
+tomli==2.0.1
 typing_extensions==4.5.0
 yarl==1.9.2

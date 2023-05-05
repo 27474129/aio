@@ -3,15 +3,18 @@ import logging
 from aiohttp import web
 from pydantic.error_wrappers import ValidationError
 
-from sources.user.schemas import User
+from sources.user.schemas import User, UpdateUser
 from sources.constants import (
     BAD_REQUEST, NOT_FOUND, WARN_OBJECT_NOT_FOUND, REQUEST_SENT_INFO, OK_CODE
 )
 from sources.user.repositories import UserRepository
-from sources.base.utils import get_response_template, serialize_response
+from sources.base.utils import (
+    get_response_template, serialize_response, execute_validation_error_action,
+    execute_ok_action
+)
 
 
-logger = logging.getLogger('__name__')
+logger = logging.getLogger(__name__)
 
 
 async def create_user(request):
@@ -19,21 +22,17 @@ async def create_user(request):
     try:
         user = User.parse_raw(await request.read())
     except ValidationError as e:
-        response['errors'] = (e.errors())
-        status = BAD_REQUEST
-        logger.info(
-            REQUEST_SENT_INFO.format(path=request.rel_url, status=status)
-        )
         return web.Response(
-            body=serialize_response(response), status=status
+            body=serialize_response(execute_validation_error_action(
+                response, request, e)
+            ),
+            status=BAD_REQUEST
         )
 
     user = await UserRepository().insert_row(user)
-    response['rows'].append(user)
-    logger.info(
-        REQUEST_SENT_INFO.format(path=request.rel_url, status=OK_CODE)
+    return web.Response(body=serialize_response(
+        execute_ok_action(response, request, user))
     )
-    return web.Response(body=serialize_response(response))
 
 
 async def get_user(request):
@@ -47,9 +46,9 @@ async def get_user(request):
         )
         return web.Response(text=serialize_response(response), status=status)
 
-    response['rows'].append(user)
-    logger.info(REQUEST_SENT_INFO.format(path=request.rel_url, status=OK_CODE))
-    return web.Response(body=serialize_response(response))
+    return web.Response(
+        body=serialize_response(execute_ok_action(response, request, user))
+    )
 
 
 async def delete_user(request):
@@ -63,8 +62,36 @@ async def delete_user(request):
         )
         return web.Response(text=serialize_response(response), status=status)
 
-    logger.info(
-        REQUEST_SENT_INFO.format(path=request.rel_url, status=OK_CODE)
+    return web.Response(
+        body=serialize_response(execute_ok_action(response, request, user))
     )
-    response['rows'].append(user)
-    return web.Response(body=serialize_response(response))
+
+
+async def update_user(request):
+    response = get_response_template()
+
+    try:
+        user = UpdateUser.parse_raw(await request.read())
+    except ValidationError as e:
+        execute_validation_error_action(response, request, e)
+        return web.Response(
+            body=serialize_response(execute_validation_error_action(
+                response, request, e)
+            ),
+            status=BAD_REQUEST
+        )
+
+    user_repository = UserRepository()
+    user_repository.schema = UpdateUser
+    user = await user_repository.update_row(user, int(request.match_info['id']))
+
+    if not user:
+        response['warnings'].append(WARN_OBJECT_NOT_FOUND.format('User'))
+        return web.Response(body=serialize_response(response), status=NOT_FOUND)
+
+    return web.Response(
+        body=serialize_response(execute_ok_action(response, request, user))
+    )
+
+# TODO: Добавить получение реестра пользователей
+# TODO: Добавить PATCH запрос к юзеру, с возможность обновления email

@@ -23,3 +23,21 @@ paths:
           description: Invalid input data
         '401':
           description: Not authenticated
+    delete:
+      summary: Delete user
+      responses:
+        '200':
+          description: User deleted
+        '404':
+          description: User not found
+        '401':
+          description: Not authenticated
+    update:
+      summary: Update user
+      responses:
+        '200':
+          description: User updated
+        '404':
+          description: User not found
+        '401':
+          description: Not authenticated

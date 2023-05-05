@@ -1,11 +1,12 @@
 import logging
+from typing import Type
 
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import (
     AsyncSession, create_async_engine, async_sessionmaker
 )
-from sqlalchemy import select, insert, delete
+from sqlalchemy import select, insert, delete, update
 from pydantic import BaseModel
 
 from sources.config import POSTGRES_CONN_STRING
@@ -26,35 +27,41 @@ class BaseRepository:
             bind=engine, class_=AsyncSession, expire_on_commit=False
         )
 
+    async def execute_query(
+        self, query: Type[Base], is_select: bool = False
+    ) -> dict:
+        logger.info(str(query))
+        async with self._async_session() as s:
+            row = (await s.execute(query)).scalar()
+            if not row:
+                return
+
+            row = row.__dict__
+            # Delete useless column
+            del row["_sa_instance_state"]
+
+            if not is_select:
+                await s.commit()
+            return row
+
     async def get_row(self, rid: int) -> dict:
         query = select(self.model).where(self.model.id == rid).limit(1)
-        logger.info(str(query))
         try:
-            async with self._async_session() as s:
-                row = (await s.execute(query)).scalar().__dict__
-                # Delete useless column
-                del row["_sa_instance_state"]
-                return row
+            return await self.execute_query(query)
         except NoResultFound:
             ...
 
     async def insert_row(self, data: schema) -> dict:
         query = insert(self.model).values(**data.dict()).returning(self.model)
-        logger.info(str(query))
-        async with self._async_session() as s:
-            row = (await s.execute(query)).scalar().__dict__
-            # Delete useless column
-            del row["_sa_instance_state"]
-            await s.commit()
-            return row
+        return await self.execute_query(query)
 
     async def delete_row(self, rid: int) -> dict:
         query = delete(self.model).where(self.model.id == rid)\
             .returning(self.model)
-        logger.info(str(query))
-        async with self._async_session() as s:
-            row = (await s.execute(query)).scalar().__dict__
-            # Delete useless column
-            del row["_sa_instance_state"]
-            await s.commit()
-            return row
+        return await self.execute_query(query)
+
+    async def update_row(self, data: schema, uid: int) -> dict:
+        """Updating first_name, last_name, password."""
+        query = update(self.model).where(self.model.id == uid)\
+            .values(**data.dict()).returning(self.model)
+        return await self.execute_query(query)

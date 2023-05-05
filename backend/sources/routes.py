@@ -1,6 +1,8 @@
 from aiohttp import web
 
-from sources.user.handlers import create_user, get_user, delete_user
+from sources.user.handlers import (
+    create_user, get_user, delete_user, update_user
+)
 from sources.config import BASE_API_URL
 
 
@@ -14,6 +16,7 @@ routes = [
     web.get(create_route('user/{id}'), get_user),
     web.post(create_route('user'), create_user),
     web.delete(create_route('user/{id}'), delete_user),
+    web.put(create_route('user/{id}'), update_user),
 ]
 
 
