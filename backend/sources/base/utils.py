@@ -2,6 +2,8 @@ import json
 import logging
 from typing import Dict, List
 
+from aiohttp.web import Request
+
 from sources.constants import BAD_REQUEST, REQUEST_SENT_INFO, OK_CODE
 
 
@@ -21,7 +23,7 @@ def serialize_response(response: Dict[str, List]) -> str:
 
 
 def execute_validation_error_action(
-    response: Dict[str, List], request, e
+    response: Dict[str, List], request: Request, e
 ) -> Dict[str, List]:
     """Function, which do some action on validation error."""
     response['errors'] = (e.errors())
@@ -32,7 +34,7 @@ def execute_validation_error_action(
 
 
 def execute_ok_action(
-    response: Dict[str, List], request, row
+    response: Dict[str, List], request: Request, row
 ) -> Dict[str, List]:
     """Function, which do some action on success request to DB."""
     response['rows'].append(row)

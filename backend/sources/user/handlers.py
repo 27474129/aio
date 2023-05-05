@@ -3,9 +3,9 @@ import logging
 from aiohttp import web
 from pydantic.error_wrappers import ValidationError
 
-from sources.user.schemas import User, UpdateUser
+from sources.user.schemas import User, UserUpdate
 from sources.constants import (
-    BAD_REQUEST, NOT_FOUND, WARN_OBJECT_NOT_FOUND, REQUEST_SENT_INFO, OK_CODE
+    BAD_REQUEST, NOT_FOUND, WARN_OBJECT_NOT_FOUND, REQUEST_SENT_INFO
 )
 from sources.user.repositories import UserRepository
 from sources.base.utils import (
@@ -53,6 +53,7 @@ async def get_user(request):
 
 async def delete_user(request):
     response = get_response_template()
+    # TODO: Добавить проверку, что пришел int в id
     user = await UserRepository().delete_row(int(request.match_info['id']))
     if not user:
         response['warnings'].append(WARN_OBJECT_NOT_FOUND.format('User'))
@@ -71,7 +72,7 @@ async def update_user(request):
     response = get_response_template()
 
     try:
-        user = UpdateUser.parse_raw(await request.read())
+        user = UserUpdate.parse_raw(await request.read())
     except ValidationError as e:
         execute_validation_error_action(response, request, e)
         return web.Response(
@@ -82,7 +83,7 @@ async def update_user(request):
         )
 
     user_repository = UserRepository()
-    user_repository.schema = UpdateUser
+    user_repository.schema = UserUpdate
     user = await user_repository.update_row(user, int(request.match_info['id']))
 
     if not user:
