@@ -29,9 +29,9 @@ class BaseUser:
 
 
 class User(BaseModel):
-    email: str = BaseUser().email
-    password: str = BaseUser().password
-    first_name: str = BaseUser().first_name
+    email: str = BaseUser.email
+    password: str = BaseUser.password
+    first_name: str = BaseUser.first_name
     last_name: str = BaseUser.last_name
 
     @validator('email')
