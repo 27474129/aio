@@ -25,14 +25,14 @@ async def create_user(request):
     except ValidationError as e:
         return web.Response(
             body=serialize_response(execute_validation_error_action(
-                response, request, e)
+                response, request, e, 'POST')
             ),
             status=BAD_REQUEST
         )
 
     user = await UserRepository().insert_row(user)
     return web.Response(body=serialize_response(
-        execute_ok_action(response, request, user))
+        execute_ok_action(response, request, user, 'POST'))
     )
 
 
@@ -44,12 +44,16 @@ async def get_user(request):
         response['warnings'].append(WARN_OBJECT_NOT_FOUND.format('User'))
         status = NOT_FOUND
         logger.info(
-            REQUEST_SENT_INFO.format(path=request.rel_url, status=status)
+            REQUEST_SENT_INFO.format(
+                path=request.rel_url, status=status, method='GET'
+            )
         )
         return web.Response(text=serialize_response(response), status=status)
 
     return web.Response(
-        body=serialize_response(execute_ok_action(response, request, user))
+        body=serialize_response(
+            execute_ok_action(response, request, user, 'GET')
+        )
     )
 
 
@@ -62,12 +66,16 @@ async def delete_user(request):
         response['warnings'].append(WARN_OBJECT_NOT_FOUND.format('User'))
         status = NOT_FOUND
         logger.info(
-            REQUEST_SENT_INFO.format(path=request.rel_url, status=status)
+            REQUEST_SENT_INFO.format(
+                path=request.rel_url, status=status, method='DELETE'
+            )
         )
         return web.Response(text=serialize_response(response), status=status)
 
     return web.Response(
-        body=serialize_response(execute_ok_action(response, request, user))
+        body=serialize_response(
+            execute_ok_action(response, request, user, 'DELETE')
+        )
     )
 
 
@@ -78,10 +86,10 @@ async def update_user(request):
     try:
         user = UserUpdate.parse_raw(await request.read())
     except ValidationError as e:
-        execute_validation_error_action(response, request, e)
+        execute_validation_error_action(response, request, e, 'PUT')
         return web.Response(
             body=serialize_response(execute_validation_error_action(
-                response, request, e)
+                response, request, e, 'PUT')
             ),
             status=BAD_REQUEST
         )
@@ -95,7 +103,9 @@ async def update_user(request):
         return web.Response(body=serialize_response(response), status=NOT_FOUND)
 
     return web.Response(
-        body=serialize_response(execute_ok_action(response, request, user))
+        body=serialize_response(
+            execute_ok_action(response, request, user, 'PUT')
+        )
     )
 
 # TODO: Добавить получение реестра пользователей

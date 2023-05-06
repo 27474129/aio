@@ -27,23 +27,27 @@ def serialize_response(response: Dict[str, List]) -> str:
 
 
 def execute_validation_error_action(
-    response: Dict[str, List], request: Request, e
+    response: Dict[str, List], request: Request, e, method: str
 ) -> Dict[str, List]:
     """Function, which do some action on validation error."""
     response['errors'] = (e.errors())
     logger.info(
-        REQUEST_SENT_INFO.format(path=request.rel_url, status=BAD_REQUEST)
+        REQUEST_SENT_INFO.format(
+            path=request.rel_url, status=BAD_REQUEST, method=method
+        )
     )
     return response
 
 
 def execute_ok_action(
-    response: Dict[str, List], request: Request, row
+    response: Dict[str, List], request: Request, row, method: str
 ) -> Dict[str, List]:
     """Function, which do some action on success request to DB."""
     response['rows'].append(row)
     logger.info(
-        REQUEST_SENT_INFO.format(path=request.rel_url, status=OK_CODE)
+        REQUEST_SENT_INFO.format(
+            path=request.rel_url, status=OK_CODE, method=method
+        )
     )
     return response
 
@@ -51,7 +55,14 @@ def execute_ok_action(
 def auth_required(func):
     """Decorator, which authenticate user."""
     async def wrapper(request):
-        token = dict(request.headers)['Authorization'].split()[1]
+        token = dict(request.headers).get('Authorization')
+        if not token:
+            return web.Response(text=NOT_AUTHORIZED_MSG, status=NOT_AUTHORIZED)
+
+        # Get token
+        token = token.split()[1]
+
         return web.Response(text=NOT_AUTHORIZED_MSG, status=NOT_AUTHORIZED) \
-            if not AuthService().decode_token(token) else await func(request)
+            if not AuthService().decode_token(token) \
+            else await func(request)
     return wrapper

@@ -3,8 +3,16 @@ info:
   title: Sample API
   description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
   version: 0.1.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
 paths:
-  /user:
+  /api/user/{id}:
     get:
       summary: Get user
       responses:
@@ -14,15 +22,15 @@ paths:
           description: User not found
         '401':
           description: Not authenticated
-    post:
-      summary: Create user
-      responses:
-        '200':
-          description: User created
-        '400':
-          description: Invalid input data
-        '401':
-          description: Not authenticated
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of user
+          type: integer
+      security:
+        - bearerAuth: []
+
     delete:
       summary: Delete user
       responses:
@@ -32,6 +40,15 @@ paths:
           description: User not found
         '401':
           description: Not authenticated
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of user
+          type: integer
+      security:
+        - bearerAuth: []
+
     put:
       summary: Update user
       responses:
@@ -41,7 +58,58 @@ paths:
           description: User not found
         '401':
           description: Not authenticated
-  /auth:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of user
+          type: integer
+        - in: body
+          name: password
+          required: true
+          description: Password
+        - in: body
+          name: first_name
+          required: true
+          description: First name
+        - in: body
+          name: last_name
+          required: true
+          description: Last name
+      security:
+        - bearerAuth: []
+
+  /api/user:
+    post:
+      summary: Create user
+      parameters:
+        - in: string
+          name: email
+          required: true
+          description: Email
+        - in: string
+          name: password
+          required: true
+          description: Password
+        - in: string
+          name: first_name
+          required: true
+          description: First name
+        - in: string
+          name: last_name
+          required: true
+          description: Last name
+      responses:
+        '200':
+          description: User created
+        '400':
+          description: Invalid input data
+        '401':
+          description: Not authenticated
+      security:
+        - bearerAuth: []
+
+  /api/auth:
     post:
       summary: Authenticate user and create jwt token
       responses:

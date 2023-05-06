@@ -12,4 +12,4 @@ WARN_OBJECT_NOT_FOUND = '{} not found'
 WARN_INVALID_LOGIN_DATA = 'Email or password is invalid'
 
 # Logging
-REQUEST_SENT_INFO = 'Request to {path}: {status}'
+REQUEST_SENT_INFO = '{method} request to {path}: {status}'

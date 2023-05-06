@@ -23,7 +23,7 @@ async def auth(request):
     except ValidationError as e:
         return web.Response(
             body=serialize_response(execute_validation_error_action(
-                response, request, e)
+                response, request, e, method='POST')
             ),
             status=BAD_REQUEST
         )
@@ -40,6 +40,6 @@ async def auth(request):
     token = AuthService().generate_token(uid=user['id'], email=user['email'])
     return web.Response(
         body=serialize_response(
-            execute_ok_action(response, request, {'token': token})
+            execute_ok_action(response, request, {'token': token}, 'POST')
         )
     )
