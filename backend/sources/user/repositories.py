@@ -2,7 +2,6 @@ from typing import Optional
 
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.orm import load_only
 
 from sources.base.repositories import BaseRepository
 from sources.user.models import User

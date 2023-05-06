@@ -41,3 +41,11 @@ paths:
           description: User not found
         '401':
           description: Not authenticated
+  /auth:
+    post:
+      summary: Authenticate user and create jwt token
+      responses:
+        '200':
+          description: User authenticated
+        '400':
+          description: Invalid input data

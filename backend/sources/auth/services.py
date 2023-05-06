@@ -4,7 +4,6 @@ from typing import Optional, Dict
 
 import jwt
 
-from sources.user.repositories import UserRepository
 from sources.config import JWT_SECRET, JWT_ALGORITHM
 
 

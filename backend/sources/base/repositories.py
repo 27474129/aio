@@ -31,10 +31,12 @@ class BaseRepository:
         self, query: Type[Base], is_select: bool = False
     ) -> Optional[Union[dict, str]]:
         logger.info(str(query))
+
         async with self._async_session() as s:
             row = (await s.execute(query)).scalar()
             if not row:
                 return
+
             # Condition for select requests, which have more than one column
             if type(row) is self.model:
                 row = row.__dict__
