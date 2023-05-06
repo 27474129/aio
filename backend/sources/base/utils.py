@@ -3,8 +3,12 @@ import logging
 from typing import Dict, List
 
 from aiohttp.web import Request
+from aiohttp import web
 
-from sources.constants import BAD_REQUEST, REQUEST_SENT_INFO, OK_CODE
+from sources.constants import (
+    BAD_REQUEST, REQUEST_SENT_INFO, OK_CODE, NOT_AUTHORIZED, NOT_AUTHORIZED_MSG
+)
+from sources.auth.services import AuthService
 
 
 logger = logging.getLogger(__name__)
@@ -42,3 +46,12 @@ def execute_ok_action(
         REQUEST_SENT_INFO.format(path=request.rel_url, status=OK_CODE)
     )
     return response
+
+
+def auth_required(func):
+    """Decorator, which authenticate user."""
+    async def wrapper(request):
+        token = dict(request.headers)['Authorization'].split()[1]
+        return web.Response(text=NOT_AUTHORIZED_MSG, status=NOT_AUTHORIZED) \
+            if not AuthService().decode_token(token) else await func(request)
+    return wrapper

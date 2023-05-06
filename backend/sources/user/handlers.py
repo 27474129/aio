@@ -10,13 +10,14 @@ from sources.constants import (
 from sources.user.repositories import UserRepository
 from sources.base.utils import (
     get_response_template, serialize_response, execute_validation_error_action,
-    execute_ok_action
+    execute_ok_action, auth_required
 )
 
 
 logger = logging.getLogger(__name__)
 
 
+@auth_required
 async def create_user(request):
     response = get_response_template()
     try:
@@ -35,6 +36,7 @@ async def create_user(request):
     )
 
 
+@auth_required
 async def get_user(request):
     response = get_response_template()
     user = await UserRepository().get_row(int(request.match_info['id']))
@@ -51,6 +53,7 @@ async def get_user(request):
     )
 
 
+@auth_required
 async def delete_user(request):
     response = get_response_template()
     # TODO: Добавить проверку, что пришел int в id
@@ -68,6 +71,7 @@ async def delete_user(request):
     )
 
 
+@auth_required
 async def update_user(request):
     response = get_response_template()
 

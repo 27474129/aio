@@ -1,5 +1,5 @@
 import logging
-from typing import Type
+from typing import Type, Optional, Union
 
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.exc import NoResultFound
@@ -27,41 +27,42 @@ class BaseRepository:
             bind=engine, class_=AsyncSession, expire_on_commit=False
         )
 
-    async def execute_query(
+    async def _execute_query(
         self, query: Type[Base], is_select: bool = False
-    ) -> dict:
+    ) -> Optional[Union[dict, str]]:
         logger.info(str(query))
         async with self._async_session() as s:
             row = (await s.execute(query)).scalar()
             if not row:
                 return
-
-            row = row.__dict__
-            # Delete useless column
-            del row["_sa_instance_state"]
+            # Condition for select requests, which have more than one column
+            if type(row) is self.model:
+                row = row.__dict__
+                # Delete useless column
+                del row["_sa_instance_state"]
 
             if not is_select:
                 await s.commit()
             return row
 
-    async def get_row(self, rid: int) -> dict:
-        query = select(self.model).where(self.model.id == rid).limit(1)
+    async def get_row(self, rid: int) -> Optional[dict]:
+        query = select(self.model).where(self.model.id == rid)
         try:
-            return await self.execute_query(query)
+            return await self._execute_query(query)
         except NoResultFound:
             ...
 
     async def insert_row(self, data: schema) -> dict:
         query = insert(self.model).values(**data.dict()).returning(self.model)
-        return await self.execute_query(query)
+        return await self._execute_query(query)
 
     async def delete_row(self, rid: int) -> dict:
         query = delete(self.model).where(self.model.id == rid)\
             .returning(self.model)
-        return await self.execute_query(query)
+        return await self._execute_query(query)
 
     async def update_row(self, data: schema, uid: int) -> dict:
         """Updating first_name, last_name, password."""
         query = update(self.model).where(self.model.id == uid)\
             .values(**data.dict()).returning(self.model)
-        return await self.execute_query(query)
+        return await self._execute_query(query)

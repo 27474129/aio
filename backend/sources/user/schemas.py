@@ -44,6 +44,10 @@ class User(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    password: str = BaseUser().password
-    first_name: str = BaseUser().first_name
-    last_name: str = BaseUser().last_name
+    password: str = BaseUser.password
+    first_name: str = BaseUser.first_name
+    last_name: str = BaseUser.last_name
+
+    @validator('password')
+    def validate_password(cls, password) -> str:
+        return BaseUser.validate_password(password)
