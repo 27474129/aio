@@ -32,7 +32,7 @@ paths:
           description: User not found
         '401':
           description: Not authenticated
-    update:
+    put:
       summary: Update user
       responses:
         '200':
