@@ -13,3 +13,6 @@ WARN_INVALID_LOGIN_DATA = 'Email or password is invalid'
 
 # Logging
 REQUEST_SENT_INFO = '{method} request to {path}: {status}'
+
+# Errors
+ERR_INVALID_MSG_SEND = 'Invalid message send'

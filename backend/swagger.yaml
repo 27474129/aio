@@ -82,23 +82,6 @@ paths:
   /api/user:
     post:
       summary: Create user
-      parameters:
-        - in: string
-          name: email
-          required: true
-          description: Email
-        - in: string
-          name: password
-          required: true
-          description: Password
-        - in: string
-          name: first_name
-          required: true
-          description: First name
-        - in: string
-          name: last_name
-          required: true
-          description: Last name
       responses:
         '200':
           description: User created

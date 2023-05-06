@@ -30,7 +30,8 @@ def execute_validation_error_action(
     response: Dict[str, List], request: Request, e, method: str
 ) -> Dict[str, List]:
     """Function, which do some action on validation error."""
-    response['errors'] = (e.errors())
+    response['errors'] = e.errors() if type(e) is not str else e
+
     logger.info(
         REQUEST_SENT_INFO.format(
             path=request.rel_url, status=BAD_REQUEST, method=method

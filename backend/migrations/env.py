@@ -5,8 +5,12 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from sources.config import POSTGRES_CONN_STRING
+from sources.config import SYNC_POSTGRES_CONN_STRING
 from sources.base.repositories import Base
+
+# Models
+from sources.user.models import User
+from sources.message.models import Message
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -42,7 +46,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option(POSTGRES_CONN_STRING)
+    url = config.get_main_option(SYNC_POSTGRES_CONN_STRING)
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -62,7 +66,7 @@ def run_migrations_online() -> None:
 
     """
     configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = POSTGRES_CONN_STRING
+    configuration["sqlalchemy.url"] = SYNC_POSTGRES_CONN_STRING
 
     connectable = engine_from_config(
         configuration,

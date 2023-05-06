@@ -3,6 +3,7 @@ from aiohttp import web
 from sources.user.handlers import (
     create_user, get_user, delete_user, update_user
 )
+from sources.message.handlers import create_message
 from sources.auth.handlers import auth
 from sources.config import BASE_API_URL
 
@@ -21,6 +22,9 @@ routes = [
 
     # Auth actions
     web.post(create_route('auth'), auth),
+
+    # Message actions
+    web.post(create_route('message'), create_message),
 ]
 
 

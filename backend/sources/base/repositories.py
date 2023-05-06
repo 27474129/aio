@@ -9,11 +9,11 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy import select, insert, delete, update
 from pydantic import BaseModel
 
-from sources.config import POSTGRES_CONN_STRING
+from sources.config import ASYNC_POSTGRES_CONN_STRING
 
 
 Base = declarative_base()
-engine = create_async_engine(POSTGRES_CONN_STRING)
+engine = create_async_engine(ASYNC_POSTGRES_CONN_STRING)
 
 logger = logging.getLogger(__name__)
 

@@ -11,7 +11,7 @@ class BaseUser:
 
     @classmethod
     def validate_email(cls, email) -> str:
-        # TODO: Check unique
+        # TODO.txt: Check unique
         if '@' not in email:
             raise ValueError('Email must contain @ symbol')
         return email
