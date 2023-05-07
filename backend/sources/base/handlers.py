@@ -1,4 +1,5 @@
 import logging
+from typing import Union, Tuple
 
 from aiohttp.web import View
 from aiohttp import web
@@ -19,11 +20,30 @@ from sources.constants import (
 logger = logging.getLogger(__name__)
 
 
-# TODO: Вынести повторяющийся функционал в методы
 class BaseView(View):
     repository = BaseRepository()
     schema = BaseModel
     allowed_methods = ('OPTIONS', 'GET', 'POST', 'PUT', 'DELETE')
+
+    async def _validate_body(
+        self, method: str
+    ) -> Union[web.Response, Tuple[dict, dict]]:
+        """Initial method, which validate request body and generate response."""
+        if method not in self.allowed_methods:
+            return (web.Response(status=NOT_ALLOWED), None)
+        response = get_response_template()
+
+        try:
+            obj = self.schema.parse_raw(await self.request.read())
+        except ValidationError as e:
+            response = web.Response(
+                    body=serialize_response(execute_validation_error_action(
+                        response, self.request, e, method='POST')
+                    ),
+                    status=BAD_REQUEST
+            )
+            return (response, None)
+        return (response, obj)
 
     @auth_required
     async def get(self):
@@ -52,23 +72,12 @@ class BaseView(View):
 
     @auth_required
     async def post(self):
-        if 'POST' not in self.allowed_methods:
-            return web.Response(status=NOT_ALLOWED)
-        response = get_response_template()
-
-        try:
-            obj = self.schema.parse_raw(await self.request.read())
-        except ValidationError as e:
-            return web.Response(
-                body=serialize_response(execute_validation_error_action(
-                    response, self.request, e, 'POST')
-                ),
-                status=BAD_REQUEST
-            )
-
-        user = await self.repository.insert_row(obj)
+        response, obj = await self._validate_body('POST')
+        if type(response) is web.Response:
+            return response
+        obj = await self.repository.insert_row(obj)
         return web.Response(body=serialize_response(
-            execute_ok_action(response, self.request, user, 'POST'))
+            execute_ok_action(response, self.request, obj, 'POST'))
         )
 
     @auth_required
@@ -100,20 +109,9 @@ class BaseView(View):
 
     @auth_required
     async def put(self):
-        if 'PUT' not in self.allowed_methods:
-            return web.Response(status=NOT_ALLOWED)
-        response = get_response_template()
-
-        try:
-            obj = self.schema.parse_raw(await self.request.read())
-        except ValidationError as e:
-            execute_validation_error_action(response, self.request, e, 'PUT')
-            return web.Response(
-                body=serialize_response(execute_validation_error_action(
-                    response, self.request, e, 'PUT')
-                ),
-                status=BAD_REQUEST
-            )
+        response, obj = await self._validate_body('PUT')
+        if type(response) is web.Response:
+            return response
 
         self.repository.schema = self.schema
         obj = await self.repository.update_row(
