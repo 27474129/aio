@@ -1,8 +1,6 @@
 from aiohttp import web
 
-from sources.user.handlers import (
-    create_user, get_user, delete_user, update_user
-)
+from sources.user.handlers import UserHandler, UserCreationHandler
 from sources.message.handlers import create_message
 from sources.auth.handlers import auth
 from sources.config import BASE_API_URL
@@ -15,14 +13,14 @@ def create_route(route: str) -> str:
 
 routes = [
     # User actions
-    web.get(create_route('user/{id}'), get_user),
-    web.post(create_route('user'), create_user),
-    web.delete(create_route('user/{id}'), delete_user),
-    web.put(create_route('user/{id}'), update_user),
+    web.view(create_route('user/{id}'), UserHandler),
+    web.view(create_route('user'), UserCreationHandler),
 
+    # TODO: Переписать на ООП
     # Auth actions
     web.post(create_route('auth'), auth),
 
+    # TODO: Переписать на ООП
     # Message actions
     web.post(create_route('message'), create_message),
 ]

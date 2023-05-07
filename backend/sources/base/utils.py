@@ -55,8 +55,8 @@ def execute_ok_action(
 
 def auth_required(func):
     """Decorator, which authenticate user."""
-    async def wrapper(request):
-        token = dict(request.headers).get('Authorization')
+    async def _wrapper(self):
+        token = dict(self.request.headers).get('Authorization')
         if not token:
             return web.Response(text=NOT_AUTHORIZED_MSG, status=NOT_AUTHORIZED)
 
@@ -65,5 +65,5 @@ def auth_required(func):
 
         return web.Response(text=NOT_AUTHORIZED_MSG, status=NOT_AUTHORIZED) \
             if not AuthService().decode_token(token) \
-            else await func(request)
-    return wrapper
+            else await func(self)
+    return _wrapper
