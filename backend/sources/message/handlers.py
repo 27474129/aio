@@ -30,7 +30,6 @@ async def create_message(request):
             status=BAD_REQUEST
         )
 
-    # TODO.txt: Add handling foreign key constraint error
     try:
         message = await MessageRepository().insert_row(message)
     except IntegrityError:

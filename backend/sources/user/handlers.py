@@ -60,7 +60,7 @@ async def get_user(request):
 @auth_required
 async def delete_user(request):
     response = get_response_template()
-    # TODO.txt: Добавить проверку, что пришел int в id
+    # TODO: Добавить проверку, что пришел int в id
     user = await UserRepository().delete_row(int(request.match_info['id']))
     if not user:
         response['warnings'].append(WARN_OBJECT_NOT_FOUND.format('User'))
@@ -108,5 +108,5 @@ async def update_user(request):
         )
     )
 
-# TODO.txt: Добавить получение реестра пользователей
-# TODO.txt: Добавить PATCH запрос к юзеру, с возможность обновления email
+# TODO: Добавить получение реестра пользователей
+# TODO: Добавить PATCH запрос к юзеру, с возможность обновления email
