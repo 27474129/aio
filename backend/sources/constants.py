@@ -17,3 +17,4 @@ REQUEST_SENT_INFO = '{method} request to {path}: {status}'
 
 # Errors
 ERR_INVALID_MSG_SEND = 'Invalid message send'
+ERR_INSERT_INTEGRITY = 'Error, invalid insert data'

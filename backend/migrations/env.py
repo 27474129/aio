@@ -11,6 +11,7 @@ from sources.base.repositories import Base
 # Models
 from sources.user.models import User
 from sources.message.models import Message
+from sources.notification.models import Notification
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

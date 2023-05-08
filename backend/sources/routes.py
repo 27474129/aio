@@ -5,6 +5,7 @@ from sources.message.handlers import MessageHandler
 from sources.auth.handlers import AuthHandler
 from sources.websocket.handlers import ChatWebsocketHandler
 from sources.config import BASE_API_URL
+from sources.notification.handlers import NotificationHandler
 
 
 def create_route(route: str) -> str:
@@ -22,6 +23,9 @@ routes = [
 
     # Message actions
     web.post(create_route('message'), MessageHandler),
+
+    # Notification actions
+    web.post(create_route('notification'), NotificationHandler),
 
     # Websockets
     web.get(create_route('ws/{to}'), ChatWebsocketHandler),

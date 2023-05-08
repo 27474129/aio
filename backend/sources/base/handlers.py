@@ -5,6 +5,7 @@ from aiohttp.web import View
 from aiohttp import web
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 from sources.base.utils import (
     get_response_template, serialize_response, execute_ok_action,
@@ -13,7 +14,7 @@ from sources.base.utils import (
 from sources.base.repositories import BaseRepository
 from sources.constants import (
     WARN_OBJECT_NOT_FOUND, NOT_FOUND, REQUEST_SENT_INFO, BAD_REQUEST,
-    NOT_ALLOWED
+    NOT_ALLOWED, ERR_INSERT_INTEGRITY
 )
 
 
@@ -75,7 +76,15 @@ class BaseView(View):
         response, obj = await self._validate_body('POST')
         if type(response) is web.Response:
             return response
-        obj = await self.repository.insert_row(obj)
+        try:
+            obj = await self.repository.insert_row(obj)
+        except IntegrityError:
+            return web.Response(
+                body=serialize_response(execute_validation_error_action(
+                    response, self.request, ERR_INSERT_INTEGRITY, 'POST')
+                ),
+                status=BAD_REQUEST
+            )
         return web.Response(body=serialize_response(
             execute_ok_action(response, self.request, obj, 'POST'))
         )
