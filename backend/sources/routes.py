@@ -3,7 +3,7 @@ from aiohttp import web
 from sources.user.handlers import UserHandler, UserCreationHandler
 from sources.message.handlers import MessageHandler
 from sources.auth.handlers import AuthHandler
-from sources.websocket.handlers import WebsocketHandlerHandler
+from sources.websocket.handlers import ChatWebsocketHandler
 from sources.config import BASE_API_URL
 
 
@@ -24,7 +24,7 @@ routes = [
     web.post(create_route('message'), MessageHandler),
 
     # Websockets
-    web.get(create_route('ws'), WebsocketHandlerHandler),
+    web.get(create_route('ws/{to}'), ChatWebsocketHandler),
 ]
 
 
