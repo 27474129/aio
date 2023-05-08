@@ -9,6 +9,8 @@ from sources.base.handlers import BaseView
 from sources.base.utils import auth_required
 from sources.auth.services import AuthService
 from sources.config import HOST, PORT
+from sources.constants import OK_CODE
+from sources.websocket.enums import Status
 
 
 logger = logging.getLogger(__name__)
@@ -42,10 +44,10 @@ class ChatWebsocketHandler(BaseView):
                     headers={'Authorization': f'Token {token}'}
                 )
 
-                if response.status_code != 200:
-                    await ws.send_str('failed')
+                if response.status_code != OK_CODE:
+                    await ws.send_str(Status.failed)
                     logger.info('Failed to send message')
                     continue
                 logger.info('Sended message')
-                await ws.send_str('sended')
+                await ws.send_str(Status.sended)
         return ws

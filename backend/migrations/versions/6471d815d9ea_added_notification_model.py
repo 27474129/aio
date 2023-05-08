@@ -1,16 +1,16 @@
 """Added Notification model
 
-Revision ID: 5e9bedcfdc08
+Revision ID: 6471d815d9ea
 Revises: 7b4b3fa597c1
-Create Date: 2023-05-08 23:04:06.787739
+Create Date: 2023-05-08 23:55:37.614272
 
 """
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '5e9bedcfdc08'
+revision = '6471d815d9ea'
 down_revision = '7b4b3fa597c1'
 branch_labels = None
 depends_on = None
@@ -22,7 +22,7 @@ def upgrade() -> None:
     sa.Column('starting_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
-    sa.Column('html_file', sa.TEXT(), nullable=True),
+    sa.Column('html_file', postgresql.BYTEA(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['created_by'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
