@@ -68,3 +68,16 @@ class BaseRepository:
         query = update(self.model).where(self.model.id == uid)\
             .values(**data.dict()).returning(self.model)
         return await self._execute_query(query)
+
+    async def get_registry(self) -> list:
+        query = select(
+            self.model.starting_at, self.model.created_by, self.model.html_file
+        )
+        logger.info(str(query))
+        async with self._async_session() as s:
+            rows = (await s.execute(query)).all()
+
+        parsed_rows = []
+        for row in rows:
+            parsed_rows.append(dict(row._mapping))
+        return parsed_rows

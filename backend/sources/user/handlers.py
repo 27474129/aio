@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 # TODO: Добавить получение реестра пользователей
 # TODO: Добавить PATCH запрос к юзеру, с возможность обновления email
-class UserHandler(BaseView):
+class UserDetailHandler(BaseView):
     repository = UserRepository()
     schema = User
     allowed_methods = ('OPTIONS', 'GET', 'PUT', 'DELETE')
@@ -20,6 +20,6 @@ class UserHandler(BaseView):
         return await super().put()
 
 
-class UserCreationHandler(UserHandler):
+class UserHandler(UserDetailHandler):
     # TODO: Add hashing password
     allowed_methods = ('OPTIONS', 'POST')

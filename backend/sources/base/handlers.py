@@ -138,3 +138,6 @@ class BaseView(View):
                 execute_ok_action(response, self.request, obj, 'PUT')
             )
         )
+
+    async def _get_registry(self):
+        return await self.repository.get_registry()

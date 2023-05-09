@@ -1,6 +1,6 @@
 from aiohttp import web
 
-from sources.user.handlers import UserHandler, UserCreationHandler
+from sources.user.handlers import UserDetailHandler, UserHandler
 from sources.message.handlers import MessageHandler
 from sources.auth.handlers import AuthHandler
 from sources.websocket.handlers import ChatWebsocketHandler
@@ -15,8 +15,8 @@ def create_route(route: str) -> str:
 
 routes = [
     # User actions
-    web.view(create_route('user/{id}'), UserHandler),
-    web.view(create_route('user'), UserCreationHandler),
+    web.view(create_route('user/{id}'), UserDetailHandler),
+    web.view(create_route('user'), UserHandler),
 
     # Auth actions
     web.post(create_route('auth'), AuthHandler),
@@ -25,7 +25,7 @@ routes = [
     web.post(create_route('message'), MessageHandler),
 
     # Notification actions
-    web.post(create_route('notification'), NotificationHandler),
+    web.view(create_route('notification'), NotificationHandler),
 
     # Websockets
     web.get(create_route('ws/{to}'), ChatWebsocketHandler),
