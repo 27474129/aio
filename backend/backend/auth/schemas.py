@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from sources.user.schemas import BaseUser
+from backend.user.schemas import BaseUser
 
 
 class UserAuth(BaseModel):

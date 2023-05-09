@@ -5,13 +5,13 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from sources.config import SYNC_POSTGRES_CONN_STRING
-from sources.base.repositories import Base
+from backend.config import SYNC_POSTGRES_CONN_STRING
+from backend.base.repositories import Base
 
 # Models
-from sources.user.models import User
-from sources.message.models import Message
-from sources.notification.models import Notification
+from backend.user.models import User
+from backend.message.models import Message
+from backend.notification.models import Notification
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

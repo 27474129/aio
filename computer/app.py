@@ -1,6 +1,6 @@
 from flask import Flask
 
-from sources.urls import add_urls
+from computer.urls import add_urls
 
 
 app = Flask(__name__)

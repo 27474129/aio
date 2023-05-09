@@ -1,6 +1,6 @@
 from flask.views import View
 
-from sources.constants import NOT_ALLOWED
+from computer.constants import NOT_ALLOWED
 
 
 class BaseView(View):

@@ -2,13 +2,13 @@ import logging
 
 from aiohttp import web
 
-from sources.base.utils import serialize_response
-from sources.constants import BAD_REQUEST, WARN_INVALID_LOGIN_DATA
-from sources.auth.schemas import UserAuth
-from sources.auth.services import AuthService
-from sources.user.repositories import UserRepository
-from sources.base.utils import execute_ok_action
-from sources.base.handlers import BaseView
+from backend.base.utils import serialize_response
+from backend.constants import BAD_REQUEST, WARN_INVALID_LOGIN_DATA
+from backend.auth.schemas import UserAuth
+from backend.auth.services import AuthService
+from backend.user.repositories import UserRepository
+from backend.base.utils import execute_ok_action
+from backend.base.handlers import BaseView
 
 
 logger = logging.getLogger(__name__)

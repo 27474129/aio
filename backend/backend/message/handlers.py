@@ -1,8 +1,8 @@
 import logging
 
-from sources.message.schemas import Message
-from sources.message.repositories import MessageRepository
-from sources.base.handlers import BaseView
+from backend.message.schemas import Message
+from backend.message.repositories import MessageRepository
+from backend.base.handlers import BaseView
 
 
 logger = logging.getLogger(__name__)

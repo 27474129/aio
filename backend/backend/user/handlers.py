@@ -1,8 +1,8 @@
 import logging
 
-from sources.user.schemas import User, UserUpdate
-from sources.user.repositories import UserRepository
-from sources.base.handlers import BaseView
+from backend.user.schemas import User, UserUpdate
+from backend.user.repositories import UserRepository
+from backend.base.handlers import BaseView
 
 
 logger = logging.getLogger(__name__)

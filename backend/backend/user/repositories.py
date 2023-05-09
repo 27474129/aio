@@ -3,9 +3,9 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 
-from sources.base.repositories import BaseRepository
-from sources.user.models import User
-from sources.user.schemas import User as UserSchema
+from backend.base.repositories import BaseRepository
+from backend.user.models import User
+from backend.user.schemas import User as UserSchema
 
 
 class UserRepository(BaseRepository):

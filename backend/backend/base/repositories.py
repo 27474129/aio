@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy import select, insert, delete, update
 from pydantic import BaseModel
 
-from sources.config import ASYNC_POSTGRES_CONN_STRING
+from backend.config import ASYNC_POSTGRES_CONN_STRING
 
 
 Base = declarative_base()

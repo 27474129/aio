@@ -5,12 +5,12 @@ import requests_async as requests
 from aiohttp import WSMsgType
 from aiohttp import web
 
-from sources.base.handlers import BaseView
-from sources.base.utils import auth_required
-from sources.auth.services import AuthService
-from sources.config import HOST, PORT
-from sources.constants import OK_CODE
-from sources.websocket.enums import Status
+from backend.base.handlers import BaseView
+from backend.base.utils import auth_required
+from backend.auth.services import AuthService
+from backend.config import HOST, PORT
+from backend.constants import OK_CODE
+from backend.websocket.enums import Status
 
 
 logger = logging.getLogger(__name__)

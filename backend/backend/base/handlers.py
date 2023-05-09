@@ -7,12 +7,12 @@ from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from sqlalchemy.exc import IntegrityError
 
-from sources.base.utils import (
+from backend.base.utils import (
     get_response_template, serialize_response, execute_ok_action,
     execute_validation_error_action, auth_required
 )
-from sources.base.repositories import BaseRepository
-from sources.constants import (
+from backend.base.repositories import BaseRepository
+from backend.constants import (
     WARN_OBJECT_NOT_FOUND, NOT_FOUND, REQUEST_SENT_INFO, BAD_REQUEST,
     NOT_ALLOWED, ERR_INSERT_INTEGRITY
 )

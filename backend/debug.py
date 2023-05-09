@@ -1,6 +1,6 @@
 from aiohttp import web
 
-from sources.routes import get_routes
+from backend.routes import get_routes
 
 
 app = web.Application(debug=True)

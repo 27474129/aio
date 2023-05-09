@@ -5,10 +5,10 @@ from typing import Dict, List
 from aiohttp.web import Request
 from aiohttp import web
 
-from sources.constants import (
+from backend.constants import (
     BAD_REQUEST, REQUEST_SENT_INFO, OK_CODE, NOT_AUTHORIZED, NOT_AUTHORIZED_MSG
 )
-from sources.auth.services import AuthService
+from backend.auth.services import AuthService
 
 
 logger = logging.getLogger(__name__)

@@ -4,7 +4,7 @@ from typing import Optional, Dict
 
 import jwt
 
-from sources.config import JWT_SECRET, JWT_ALGORITHM
+from backend.config import JWT_SECRET, JWT_ALGORITHM
 
 
 logger = logging.getLogger(__name__)

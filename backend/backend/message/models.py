@@ -2,8 +2,8 @@ from datetime import datetime
 
 from sqlalchemy import Column, Text, ForeignKey, Integer, TIMESTAMP
 
-from sources.base.models import BaseModel
-from sources.base.repositories import Base
+from backend.base.models import BaseModel
+from backend.base.repositories import Base
 
 
 class Message(Base, BaseModel):

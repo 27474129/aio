@@ -2,8 +2,8 @@ from datetime import datetime
 
 from sqlalchemy import String, Column, TIMESTAMP
 
-from sources.base.models import BaseModel
-from sources.base.repositories import Base
+from backend.base.models import BaseModel
+from backend.base.repositories import Base
 
 
 class User(Base, BaseModel):

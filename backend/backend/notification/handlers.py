@@ -2,12 +2,12 @@ import logging
 
 from aiohttp.web import Response
 
-from sources.base.handlers import BaseView
-from sources.base.utils import auth_required
-from sources.notification.repository import NotificationRepository
-from sources.notification.schemas import Notification
-from sources.base.utils import serialize_response, get_response_template
-from sources.constants import REQUEST_SENT_INFO, OK_CODE
+from backend.base.handlers import BaseView
+from backend.base.utils import auth_required
+from backend.notification.repository import NotificationRepository
+from backend.notification.schemas import Notification
+from backend.base.utils import serialize_response, get_response_template
+from backend.constants import REQUEST_SENT_INFO, OK_CODE
 
 
 logger = logging.getLogger(__name__)

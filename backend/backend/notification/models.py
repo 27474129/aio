@@ -3,8 +3,8 @@ from datetime import datetime
 from sqlalchemy import Column, TIMESTAMP, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import BYTEA
 
-from sources.base.models import BaseModel
-from sources.base.repositories import Base
+from backend.base.models import BaseModel
+from backend.base.repositories import Base
 
 
 class Notification(Base, BaseModel):

@@ -1,4 +1,4 @@
-from sources.mailing.handlers import MailingView
+from backend.mailing.handlers import MailingView
 
 
 def add_urls(app):

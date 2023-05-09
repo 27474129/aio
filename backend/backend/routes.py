@@ -1,11 +1,11 @@
 from aiohttp import web
 
-from sources.user.handlers import UserDetailHandler, UserHandler
-from sources.message.handlers import MessageHandler
-from sources.auth.handlers import AuthHandler
-from sources.websocket.handlers import ChatWebsocketHandler
-from sources.config import BASE_API_URL
-from sources.notification.handlers import NotificationHandler
+from backend.user.handlers import UserDetailHandler, UserHandler
+from backend.message.handlers import MessageHandler
+from backend.auth.handlers import AuthHandler
+from backend.websocket.handlers import ChatWebsocketHandler
+from backend.config import BASE_API_URL
+from backend.notification.handlers import NotificationHandler
 
 
 def create_route(route: str) -> str:
