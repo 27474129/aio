@@ -1,1 +1,1 @@
-NOT_ALLOWED = 405
+DEBUG = True

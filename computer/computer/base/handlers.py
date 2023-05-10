@@ -1,11 +1,30 @@
 from flask.views import View
-
-from computer.constants import NOT_ALLOWED
+from flask import request
 
 
 class BaseView(View):
-    allowed_methods = ('OPTIONS', 'GET', 'POST', 'PUT', 'DELETE')
+    methods = ('OPTIONS', 'GET', 'POST', 'PUT', 'DELETE')
 
     def dispatch_request(self):
-        if self.request.method not in self.allowed_method:
-            return
+        if request.method == 'POST':
+            return self._post()
+
+        if request.method == 'GET':
+            return self._get()
+
+        if request.method == 'PUT':
+            return self._put()
+
+        return self._delete()
+
+    def _get(self):
+        ...
+
+    def _post(self):
+        ...
+
+    def _put(self):
+        ...
+
+    def _delete(self):
+        ...
