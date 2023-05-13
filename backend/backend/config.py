@@ -10,4 +10,4 @@ JWT_SECRET = 'as9erdfgfd9hg3e59vsdfogvdfk'
 JWT_ALGORITHM = 'HS256'
 
 HOST = 'http://127.0.0.1'
-PORT = 8090
+PORT = 8000

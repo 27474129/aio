@@ -1,1 +1,3 @@
 DEBUG = True
+
+OK_CODE = 200

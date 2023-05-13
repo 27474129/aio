@@ -13,27 +13,25 @@ from backend.constants import OK_CODE
 from backend.websocket.enums import Status
 
 
-logger = logging.getLogger(__name__)
-
-
 class ChatWebsocketHandler(BaseView):
     allowed_methods = ('OPTIONS', 'GET')
 
     @auth_required
     async def get(self):
+        # TODO: Вынести часть функционала в будущем
         token = self.request.headers['Authorization'].split()[1]
         payload = AuthService().decode_token(token)
         to = self.request.match_info['to']
 
         ws = web.WebSocketResponse()
         await ws.prepare(self.request)
-        logger.info('Connected to websocket')
+        self.logger.info('Connected to websocket')
 
         async for msg in ws:
             if msg.type == WSMsgType.TEXT:
                 msg = msg.data.strip()
                 if 'close' == msg:
-                    logger.info('Connection closed')
+                    self.logger.info('Connection closed')
                     await ws.close()
                     return ws
 
@@ -46,8 +44,9 @@ class ChatWebsocketHandler(BaseView):
 
                 if response.status_code != OK_CODE:
                     await ws.send_str(Status.failed)
-                    logger.info('Failed to send message')
+                    self.logger.info('Failed to send message')
                     continue
-                logger.info('Sended message')
+
+                self.logger.info('Sended message')
                 await ws.send_str(Status.sended)
         return ws

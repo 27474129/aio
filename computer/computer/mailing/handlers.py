@@ -1,12 +1,9 @@
-import smtplib
-from email.mime.text import MIMEText
-
 import pika
+import requests
 
 from computer.base.handlers import BaseView
-from computer.config import (
-    EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT
-)
+from computer.config import BACKEND_HOST, BACKEND_PORT
+from computer.base.utils import backend_auth
 from computer.mailing.tasks import mailing_task
 
 
@@ -14,6 +11,7 @@ class MailingView(BaseView):
     methods = ('OPTIONS', 'GET', 'POST')
 
     def get(self):
+        # TODO: Delete test method
         conn = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         channel = conn.channel()
         channel.queue_declare(queue='mailing')
@@ -24,15 +22,19 @@ class MailingView(BaseView):
         return 'asd'
 
     def post(self):
-        mailing_task.delay('Emails')
-        return 'asd'
-        to = 'harlanvova15@gmail.com'
-        msg = MIMEText('Test mailing')
-        msg['Subject'] = 'Test mail'
-        msg['From'] = EMAIL_HOST_USER
-        msg['To'] = to
+        # TODO: Сделать возможность планировать рассылку
+        jwt_token = backend_auth()
+        headers = {
+            'Authorization': f'Token {jwt_token}'
+        }
+        response = requests.get(
+            f'{BACKEND_HOST}:{BACKEND_PORT}/api/user', headers=headers
+        ).json()
 
-        with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT) as smtp_serv:
-            smtp_serv.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
-            smtp_serv.sendmail(EMAIL_HOST_USER, to, msg.as_string())
-        return 'Mail successfully sent'
+        emails = []
+        for row in response['rows']:
+            emails.append(row['email'])
+
+        mailing_task.delay(emails)
+
+        return 'Mailing started successfully'
