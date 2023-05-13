@@ -38,7 +38,7 @@ class ChatWebsocketHandler(BaseView):
                     return ws
 
                 body = {'to': int(to), 'by': payload['uid'], 'text': msg}
-                response = await requests._post(
+                response = await requests.post(
                     f'{HOST}:{PORT}/api/message',
                     data=json.dumps(body),
                     headers={'Authorization': f'Token {token}'}

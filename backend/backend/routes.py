@@ -19,10 +19,10 @@ routes = [
     web.view(create_route('user'), UserHandler),
 
     # Auth actions
-    web._post(create_route('auth'), AuthHandler),
+    web.post(create_route('auth'), AuthHandler),
 
     # Message actions
-    web._post(create_route('message'), MessageHandler),
+    web.post(create_route('message'), MessageHandler),
 
     # Notification actions
     web.view(create_route('notification'), NotificationHandler),

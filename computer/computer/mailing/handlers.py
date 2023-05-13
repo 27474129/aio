@@ -12,7 +12,7 @@ from computer.config import (
 class MailingView(BaseView):
     methods = ('OPTIONS', 'GET', 'POST')
 
-    def _get(self):
+    def get(self):
         conn = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         channel = conn.channel()
         channel.queue_declare(queue='mailing')
@@ -22,7 +22,7 @@ class MailingView(BaseView):
         conn.close()
         return 'asd'
 
-    def _post(self):
+    def post(self):
         to = 'harlanvova15@gmail.com'
 
         msg = MIMEText('Test mailing')

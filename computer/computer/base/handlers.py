@@ -7,24 +7,24 @@ class BaseView(View):
 
     def dispatch_request(self):
         if request.method == 'POST':
-            return self._post()
+            return self.post()
 
         if request.method == 'GET':
-            return self._get()
+            return self.get()
 
         if request.method == 'PUT':
-            return self._put()
+            return self.put()
 
-        return self._delete()
+        return self.delete()
 
-    def _get(self):
+    def get(self):
         ...
 
-    def _post(self):
+    def post(self):
         ...
 
-    def _put(self):
+    def put(self):
         ...
 
-    def _delete(self):
+    def delete(self):
         ...
