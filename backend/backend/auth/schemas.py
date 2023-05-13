@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
-from backend.user.schemas import BaseUser
+from backend.user.schemas import BaseUserSchema
 
 
 class UserAuth(BaseModel):
-    email: str = BaseUser.email
-    password: str = BaseUser.password
+    email: str = BaseUserSchema.email
+    password: str = BaseUserSchema.password

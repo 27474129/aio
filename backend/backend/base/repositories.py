@@ -7,7 +7,10 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession, create_async_engine, async_sessionmaker
 )
 from sqlalchemy import select, insert, delete, update
-from pydantic import BaseModel
+from sqlalchemy.sql._dml_constructors import Update
+from sqlalchemy.sql.selectable import Select
+from sqlalchemy.sql.dml import Insert, Delete
+from pydantic import BaseModel as BaseSchema
 
 from backend.config import ASYNC_POSTGRES_CONN_STRING
 
@@ -15,12 +18,19 @@ from backend.config import ASYNC_POSTGRES_CONN_STRING
 Base = declarative_base()
 engine = create_async_engine(ASYNC_POSTGRES_CONN_STRING)
 
-logger = logging.getLogger(__name__)
-
 
 class BaseRepository:
-    model = Base
-    schema = BaseModel
+    model: Type[Base] = Base
+    schema: Type[BaseSchema] = BaseSchema
+
+    registry_type = Union[Select, Insert, Delete, Update]
+    registry_query: registry_type = None
+
+    logger = logging.getLogger(__name__)
+
+    def get_registry_query(self) -> registry_type:
+        return select(self.model) if self.registry_query is None \
+            else self.registry_query
 
     def __init__(self):
         self._async_session = async_sessionmaker(
@@ -28,9 +38,9 @@ class BaseRepository:
         )
 
     async def _execute_query(
-        self, query: Type[Base], is_select: bool = False
+        self, query: registry_type, is_select: bool = False
     ) -> Optional[Union[dict, str]]:
-        logger.info(str(query))
+        self.logger.info(str(query))
 
         async with self._async_session() as s:
             row = (await s.execute(query)).scalar()
@@ -70,10 +80,8 @@ class BaseRepository:
         return await self._execute_query(query)
 
     async def get_registry(self) -> list:
-        query = select(
-            self.model.starting_at, self.model.created_by, self.model.html_file
-        )
-        logger.info(str(query))
+        query = self.get_registry_query()
+        self.logger.info(str(query))
         async with self._async_session() as s:
             rows = (await s.execute(query)).all()
 

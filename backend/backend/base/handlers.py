@@ -1,9 +1,9 @@
 import logging
-from typing import Union, Tuple
+from typing import Union, Tuple, Dict
 
-from aiohttp.web import View
+from aiohttp.web import View, Response
 from aiohttp import web
-from pydantic import BaseModel
+from pydantic import BaseModel as BaseSchema
 from pydantic.error_wrappers import ValidationError
 from sqlalchemy.exc import IntegrityError
 
@@ -14,17 +14,18 @@ from backend.base.utils import (
 from backend.base.repositories import BaseRepository
 from backend.constants import (
     WARN_OBJECT_NOT_FOUND, NOT_FOUND, REQUEST_SENT_INFO, BAD_REQUEST,
-    NOT_ALLOWED, ERR_INSERT_INTEGRITY
+    NOT_ALLOWED, ERR_INSERT_INTEGRITY, OK_CODE
 )
-
-
-logger = logging.getLogger(__name__)
+from backend.base.models import BaseModel
 
 
 class BaseView(View):
+    model = BaseModel
     repository = BaseRepository()
-    schema = BaseModel
+    schema = BaseSchema
     allowed_methods = ('OPTIONS', 'GET', 'POST', 'PUT', 'DELETE')
+
+    logger = logging.getLogger(__name__)
 
     async def _validate_body(
         self, method: str
@@ -56,7 +57,7 @@ class BaseView(View):
         if not obj:
             response['warnings'].append(WARN_OBJECT_NOT_FOUND.format('User'))
             status = NOT_FOUND
-            logger.info(
+            self.logger.info(
                 REQUEST_SENT_INFO.format(
                     path=self.request.rel_url, status=status, method='GET'
                 )
@@ -102,7 +103,7 @@ class BaseView(View):
         if not obj:
             response['warnings'].append(WARN_OBJECT_NOT_FOUND.format('User'))
             status = NOT_FOUND
-            logger.info(
+            self.logger.info(
                 REQUEST_SENT_INFO.format(
                     path=self.request.rel_url, status=status, method='DELETE'
                 )
@@ -138,6 +139,3 @@ class BaseView(View):
                 execute_ok_action(response, self.request, obj, 'PUT')
             )
         )
-
-    async def _get_registry(self):
-        return await self.repository.get_registry()

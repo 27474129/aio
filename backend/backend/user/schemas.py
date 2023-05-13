@@ -3,7 +3,7 @@ import re
 from pydantic import BaseModel, Field, validator
 
 
-class BaseUser:
+class BaseUserSchema:
     email: str = Field(max_length=50, min_length=6)
     password: str = Field(max_length=100, min_length=8)
     first_name: str = Field(max_length=50)
@@ -28,26 +28,26 @@ class BaseUser:
         return password
 
 
-class User(BaseModel):
-    email: str = BaseUser.email
-    password: str = BaseUser.password
-    first_name: str = BaseUser.first_name
-    last_name: str = BaseUser.last_name
+class UserSchema(BaseModel):
+    email: str = BaseUserSchema.email
+    password: str = BaseUserSchema.password
+    first_name: str = BaseUserSchema.first_name
+    last_name: str = BaseUserSchema.last_name
 
     @validator('email')
     def validate_email(cls, email) -> str:
-        return BaseUser.validate_email(email)
+        return BaseUserSchema.validate_email(email)
 
     @validator('password')
     def validate_password(cls, password) -> str:
-        return BaseUser.validate_password(password)
+        return BaseUserSchema.validate_password(password)
 
 
-class UserUpdate(BaseModel):
-    password: str = BaseUser.password
-    first_name: str = BaseUser.first_name
-    last_name: str = BaseUser.last_name
+class UserUpdateSchema(BaseModel):
+    password: str = BaseUserSchema.password
+    first_name: str = BaseUserSchema.first_name
+    last_name: str = BaseUserSchema.last_name
 
     @validator('password')
     def validate_password(cls, password) -> str:
-        return BaseUser.validate_password(password)
+        return BaseUserSchema.validate_password(password)

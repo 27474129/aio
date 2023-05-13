@@ -4,7 +4,7 @@ from datetime import datetime
 from pydantic import BaseModel, validator
 
 
-class Notification(BaseModel):
+class NotificationSchema(BaseModel):
     html_file: bytes
     created_by: int
     starting_at: datetime

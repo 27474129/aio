@@ -1,5 +1,5 @@
 amqp
-celery==4.4.0
+celery
 Flask
 importlib-metadata==4.13.0
 pika==1.1.0

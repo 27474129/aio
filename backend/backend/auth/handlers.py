@@ -11,9 +11,6 @@ from backend.base.utils import execute_ok_action
 from backend.base.handlers import BaseView
 
 
-logger = logging.getLogger(__name__)
-
-
 class AuthHandler(BaseView):
     allowed_methods = ('OPTIONS', 'POST')
     schema = UserAuth
@@ -29,7 +26,7 @@ class AuthHandler(BaseView):
         user = await self.repository.get_user_by_email(obj['email'])
         if not user:
             response['warnings'].append(WARN_INVALID_LOGIN_DATA)
-            logger.info(WARN_INVALID_LOGIN_DATA)
+            self.logger.info(WARN_INVALID_LOGIN_DATA)
             return web.Response(
                 body=serialize_response(response),
                 status=BAD_REQUEST
