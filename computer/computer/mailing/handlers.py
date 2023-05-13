@@ -7,6 +7,7 @@ from computer.base.handlers import BaseView
 from computer.config import (
     EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT
 )
+from celery_.celery import add
 
 
 class MailingView(BaseView):
@@ -23,6 +24,8 @@ class MailingView(BaseView):
         return 'asd'
 
     def post(self):
+        add.delay(1)
+        return 'asd'
         to = 'harlanvova15@gmail.com'
 
         msg = MIMEText('Test mailing')
