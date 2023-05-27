@@ -1,5 +1,3 @@
-import logging
-
 from aiohttp import web
 
 from backend.base.utils import serialize_response

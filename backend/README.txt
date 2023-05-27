@@ -1,5 +1,6 @@
 --- Migrations:
 alembic upgrade head
+P.S. Before migrations you need to create local db: aio
 
 --- Run app server:
 gunicorn app:init_app --bind localhost:8000 --worker-class aiohttp.GunicornWebWorker --reload

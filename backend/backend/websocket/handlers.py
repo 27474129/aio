@@ -1,4 +1,3 @@
-import logging
 import json
 
 import requests_async as requests
@@ -30,7 +29,7 @@ class ChatWebsocketHandler(BaseView):
         async for msg in ws:
             if msg.type == WSMsgType.TEXT:
                 msg = msg.data.strip()
-                if 'close' == msg:
+                if Status.closed == msg:
                     self.logger.info('Connection closed')
                     await ws.close()
                     return ws

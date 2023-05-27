@@ -1,5 +1,13 @@
-ASYNC_POSTGRES_CONN_STRING = 'postgresql+asyncpg://postgres@localhost/aio'
-SYNC_POSTGRES_CONN_STRING = 'postgresql://postgres@localhost/aio'
+POSTGRES_USER = 'aiopostgres'
+POSTGRES_PASS = 'sdfjuhSDt43'
+POSTGRES_HOST = 'localhost'
+POSTGRES_DB = 'aio'
+POSTGRES_PORT = 5432
+
+ASYNC_POSTGRES_CONN_STRING = f'postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASS}' \
+                             f'@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
+SYNC_POSTGRES_CONN_STRING = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASS}' \
+                            f'@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
 
 BASE_API_URL = '/api/'
 
